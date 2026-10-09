@@ -793,14 +793,13 @@ MonoBehaviour:
   playerHpText: {fileID: 2078987684}
   monsterHpText: {fileID: 735414828}
   logText: {fileID: 1010005920}
-  skillText: {fileID: 0}
   logContent: {fileID: 156652637}
   logScrollRect: {fileID: 1185170748}
   playerHpFill: {fileID: 322443533}
   monsterHpFill: {fileID: 71745471}
   skillBtnPrefab: {fileID: 1929586402065500525, guid: 6f836ed073571ea469a9f0efd2e15fac, type: 3}
   skillListParent: {fileID: 1768508932}
-  DeadPanel: {fileID: 0}
+  DeadPanel: {fileID: 1189888781}
 --- !u!4 &462679682
 Transform:
   m_ObjectHideFlags: 0
@@ -2719,13 +2718,14 @@ GameObject:
   - component: {fileID: 1189888782}
   - component: {fileID: 1189888784}
   - component: {fileID: 1189888783}
+  - component: {fileID: 1189888785}
   m_Layer: 5
   m_Name: DeadPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1189888782
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2786,6 +2786,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1189888781}
   m_CullTransparentMesh: 1
+--- !u!114 &1189888785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189888781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a3c71e77b1b1e43b2acae9f89ef54a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BattlePanel: {fileID: 1650349477}
+  MainMenuPanel: {fileID: 1937696303}
+  RestartBtn: {fileID: 182377557}
+  ExitBtn: {fileID: 1098217636}
 --- !u!1 &1341344182
 GameObject:
   m_ObjectHideFlags: 0
@@ -3517,7 +3533,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1937696304
 RectTransform:
   m_ObjectHideFlags: 0

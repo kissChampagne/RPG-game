@@ -12,7 +12,6 @@ public class FightManager : MonoBehaviour
     public TMP_Text playerHpText;
     public TMP_Text monsterHpText;
     public TMP_Text logText;
-    public TMP_Text skillText;
 
     public RectTransform logContent;
     public ScrollRect logScrollRect;
@@ -48,7 +47,7 @@ public class FightManager : MonoBehaviour
         //怪物技能
         monsterSkills = new List<Skills>()
         {
-            new AttackSkill("爪击", 10, 20),
+            new AttackSkill("爪击", 99, 100),
             new DefendSkill("硬皮")
         };
 
@@ -56,14 +55,14 @@ public class FightManager : MonoBehaviour
         GenerateSkillBtns();
 
         //绑定死亡回调
-        playerUnit.OnDeath += AddText;
-        monsterUnit.OnDeath += AddText;
+        playerUnit.OnDeath += PlayerDied;
+        monsterUnit.OnDeath += MonsterDied;
 
         RefreshHpUI();
         AddText("战斗开始");
     }
     //刷新血条
-    public void RefreshHpUI()
+    void RefreshHpUI()
     {
         float playerPercent = (float)playerUnit.Health / 100f;
         playerHpText.text = $"{playerUnit.Health}";
@@ -73,7 +72,7 @@ public class FightManager : MonoBehaviour
         monsterHpFill.fillAmount = monsterPercent;
     }
     //添加战斗日志
-    public void AddText(string msg)
+    void AddText(string msg)
     {
         logText.text += msg + "\n";
         logText.ForceMeshUpdate();
@@ -82,7 +81,7 @@ public class FightManager : MonoBehaviour
         logScrollRect.verticalNormalizedPosition = 0f;
     }
     //生成按钮
-    public void GenerateSkillBtns()
+    void GenerateSkillBtns()
     {
         _skillItems = new SkillItem[playerSkills.Count];
 
@@ -104,7 +103,7 @@ public class FightManager : MonoBehaviour
             item.SetInteractable(enable);
         }
     }
-    public void UseSkill(int skillIndex)
+    void UseSkill(int skillIndex)
     {
         if (playerUnit.Status == FightUnit.UnitStatus.Dead 
             || monsterUnit.Status == FightUnit.UnitStatus.Dead
@@ -154,21 +153,22 @@ public class FightManager : MonoBehaviour
         monsterUnit.Health = mconfig.health;
         monsterUnit.GetComponent<MonsterIdentifier>().monsterId = monsterId;
     }
+
+    void PlayerDied(string name)
+    {
+        AddText($"{name} 被击败");
+        DeadPanel.SetActive(true);
+        SetAllSkillBtnsInteractable(false);
+    }
+    void MonsterDied(string name)
+    {
+        AddText($"{name} 被击败");
+        OnBattleWin?.Invoke();
+        SetAllSkillBtnsInteractable(false);
+    }
+
     void Update()
     {
-        //单位死亡时，直接停止
-        if (playerUnit.Status == FightUnit.UnitStatus.Dead || monsterUnit.Status == FightUnit.UnitStatus.Dead)
-        {
-            if (monsterUnit.Status == FightUnit.UnitStatus.Dead)
-            {
-                OnBattleWin?.Invoke();
-            }
-            else
-            {
-                DeadPanel.SetActive(true);
-            }
-            return;
-        }
         if (IsPlayerTurn)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -183,19 +183,6 @@ public class FightManager : MonoBehaviour
     }
     void MonsterTurn()
     {
-        if (playerUnit.Status == FightUnit.UnitStatus.Dead || monsterUnit.Status == FightUnit.UnitStatus.Dead)
-        {
-            if (monsterUnit.Status == FightUnit.UnitStatus.Dead)
-            {
-                OnBattleWin?.Invoke();
-            }
-            else
-            {
-                DeadPanel.SetActive(true);
-            }
-            return ;
-        }
-
         int rand = _random.Next(0, monsterSkills.Count);
         monsterSkills[rand].Execute(monsterUnit, playerUnit, AddText);
 
